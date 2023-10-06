@@ -33,6 +33,8 @@ namespace db {
     class HeapFile : public DbFile {
         // TODO pa1.5: add private members
     public:
+        // TODO added
+        const TupleDesc td;
 
         /**
          * Constructs a heap file backed by the specified file.
@@ -68,8 +70,6 @@ namespace db {
 
         HeapFileIterator end() const;
 
-        // TODO added
 
-        const TupleDesc &td;
     };
 }
