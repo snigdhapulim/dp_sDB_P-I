@@ -1,6 +1,6 @@
 # Assignments
 - [Introduction](docs/README.md)
-- [Assignment 1](docs/pa1.md)
+- [Assignment 1](pa1.md)
 - [Assignment 2](docs/pa2.md)
 - [Assignment 3](docs/pa3.md)
 - [Assignment 4](docs/pa4.md)

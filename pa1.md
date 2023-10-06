@@ -7,7 +7,7 @@
 The `Database` class provides access to a collection of static objects that are the global state of the database. In
 particular, this includes methods to access the catalog (the list of all the tables in the database) and the buffer
 pool (the collection of database file pages currently in memory). We have implemented the Database class for you. You
-should take a look at this [file](/include/db/Database.h) as you will need to access these objects.
+should take a look at this [file](include/db/Database.h) as you will need to access these objects.
 
 ### Fields and Tuples
 
@@ -58,7 +58,7 @@ arranged consecutively on disk. Each page consists of one or more bytes represen
 size bytes of actual page content. Each tuple requires `tuple_size * 8` bits for its content and 1 bit for the header.
 Thus, the number of tuples that can fit on a single page is:
 
-$\text{tuples per page} = \lfloor (\text{page size} * 8) / (\text{tuple size} * 8 + 1) \rfloor$
+$/text{tuples per page} = /lfloor (text{page size} * 8) / (text{tuple size} * 8 + 1) /rfloor$
 
 Where tuple size is the size of a tuple in the page in bytes. The idea here is that each tuple requires one additional
 bit of storage in the header. We compute the number of bits in a page (by multiplying page size by 8), and divide this
@@ -67,7 +67,7 @@ floor operation rounds down to the nearest integer number of tuples (we don't wa
 
 Once we know the number of tuples per page, the number of bytes required to store the header is simply:
 
-$\text{header bytes} = \text{page size} - \text{tuples per page} * \text{tuple size}$
+$/text{header bytes} = /text{page size} - /text{tuples per page} * /text{tuple size}$
 
 The low (least significant) bits of each byte represents the status of the slots that are earlier in the file. Hence,
 the lowest bit of the first byte represents whether or not the first slot in the page is in use. Also, note that the
@@ -113,34 +113,34 @@ files:
 
 ### Exercise 1
 
-- TupleDesc ([header](/include/db/TupleDesc.h) & [implementation](/db/TupleDesc.cpp))
-- Tuple ([header](/include/db/Tuple.h) & [implementation](/db/Tuple.cpp))
+- TupleDesc ([header](include/db/TupleDesc.h) & [implementation](db/TupleDesc.cpp))
+- Tuple ([header](include/db/Tuple.h) & [implementation](db/Tuple.cpp))
 
 ### Exercise 2
 
 Add any private members needed and implement the methods in:
 
-- Catalog ([header](/include/db/Catalog.h) & [implementation](/db/Catalog.cpp))
+- Catalog ([header](include/db/Catalog.h) & [implementation](db/Catalog.cpp))
 
 ### Exercise 3
 
 Add any private members needed and implement the methods in:
 
-- BufferPool ([header](/include/db/BufferPool.h) & [implementation](/db/BufferPool.cpp))
+- BufferPool ([header](include/db/BufferPool.h) & [implementation](db/BufferPool.cpp))
 
 ### Exercise 4
 
-- HeapPageId ([header](/include/db/HeapPageId.h) & [implementation](/db/HeapPageId.cpp))
-- RecordID ([header](/include/db/RecordID.h) & [implementation](/db/RecordID.cpp))
-- HeapPage ([header](/include/db/HeapPage.h) & [implementation](/db/HeapPage.cpp))
+- HeapPageId ([header](include/db/HeapPageId.h) & [implementation](db/HeapPageId.cpp))
+- RecordID ([header](include/db/RecordID.h) & [implementation](db/RecordID.cpp))
+- HeapPage ([header](include/db/HeapPage.h) & [implementation](db/HeapPage.cpp))
 
 ### Exercise 5
 
-- HeapFile ([header](/include/db/HeapFile.h) & [implementation](/db/HeapFile.cpp))
+- HeapFile ([header](include/db/HeapFile.h) & [implementation](db/HeapFile.cpp))
 
 ### Exercise 6
 
-- SeqScan ([header](/include/db/SeqScan.h) & [implementation](/db/SeqScan.cpp))
+- SeqScan ([header](include/db/SeqScan.h) & [implementation](db/SeqScan.cpp))
 
 This operator sequentially scans all of the tuples from the pages of the table specified by the `tableid` in the
 constructor. This operator should access tuples through the `DbFile`.

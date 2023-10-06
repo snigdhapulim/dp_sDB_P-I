@@ -12,6 +12,9 @@ namespace db {
     class HeapPageId : public PageId {
         // TODO pa1.4: Add private members
     public:
+        // TODO added
+        int tableId;
+        int pgNo;
         /**
          * Constructor. Create a page id structure for a specific page of a
          * specific table.

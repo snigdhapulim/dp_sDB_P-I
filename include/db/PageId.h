@@ -2,6 +2,8 @@
 #define DB_PAGEID_H
 
 #include <stdexcept>
+// TODO added
+#include <functional>
 
 namespace db {
     /**
@@ -24,7 +26,10 @@ namespace db {
 template<>
 struct std::hash<db::PageId> {
     std::size_t operator()(const db::PageId &r) const {
-        return std::hash<int>()(r.getTableId()) ^ std::hash<int>()(r.pageNumber());
+        // TODO added
+        // return std::hash<int>()(r.getTableId()) ^ std::hash<int>()(r.pageNumber());
+        // return std::hash<int>()(r.getTableId()) ^ std::hash<int>()(r.pageNumber());
+        return r.getTableId() ^ r.pageNumber();
     }
 };
 

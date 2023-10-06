@@ -67,5 +67,9 @@ namespace db {
         HeapFileIterator begin() const;
 
         HeapFileIterator end() const;
+
+        // TODO added
+
+        const TupleDesc &td;
     };
 }
