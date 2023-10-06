@@ -32,9 +32,11 @@ namespace db {
      */
     class HeapFile : public DbFile {
         // TODO pa1.5: add private members
-    public:
+    private:
         // TODO added
         const TupleDesc td;
+
+    public:
 
         /**
          * Constructs a heap file backed by the specified file.
