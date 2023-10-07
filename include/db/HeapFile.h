@@ -11,6 +11,7 @@
 namespace db {
     class HeapFileIterator {
         // TODO pa1.5: add private members
+
     public:
         HeapFileIterator(/* TODO pa1.5: add parameters */);
         bool operator!=(const HeapFileIterator &other) const;
@@ -33,8 +34,9 @@ namespace db {
     class HeapFile : public DbFile {
         // TODO pa1.5: add private members
     private:
-        // TODO added
         const TupleDesc &td;
+        std::string filename;
+        mutable std::fstream file;
 
     public:
 
