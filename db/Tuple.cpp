@@ -13,6 +13,7 @@ Tuple::Tuple(const TupleDesc &td, RecordId *rid)
     fields.resize(td.numFields(), nullptr);
 }
 
+
 const TupleDesc &Tuple::getTupleDesc() const {
     // TODO pa1.1: implement
     return tupleDesc;
