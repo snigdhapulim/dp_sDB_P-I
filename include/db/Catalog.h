@@ -24,6 +24,9 @@ namespace db {
      */
     class Catalog {
         // TODO pa1.2: add private members
+    private:
+        std::unordered_map<std::string, int> nameToIdMap;
+        std::unordered_map<int, Table> idToTableMap;
     public:
         // disable copy
         Catalog(const Catalog &) = delete;
