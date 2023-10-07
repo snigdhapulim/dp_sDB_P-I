@@ -9,11 +9,21 @@
 #include <db/HeapPage.h>
 
 namespace db {
+    class HeapFile;
+
     class HeapFileIterator {
         // TODO pa1.5: add private members
 
+    private:
+        HeapFile &heapFile;
+        int currentPageId;
+        int currentTupleIndex;
+        mutable int numPagesCache = -1;
+        HeapPage* currentPage;
+        int tupleIter;
+
     public:
-        HeapFileIterator(/* TODO pa1.5: add parameters */);
+        HeapFileIterator(HeapFile &file, int startPageId, int startTupleIndex);
         bool operator!=(const HeapFileIterator &other) const;
 
         Tuple &operator*() const;
@@ -37,6 +47,8 @@ namespace db {
         const TupleDesc &td;
         std::string filename;
         mutable std::fstream file;
+        mutable int mutableNumPages;
+        mutable bool isNumPagesSet = false;
 
     public:
 

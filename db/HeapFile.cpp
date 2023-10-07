@@ -14,14 +14,17 @@ using namespace db;
 //
 
 // TODO pa1.5: implement
-HeapFile::HeapFile(const char *fname, const TupleDesc &td) : td(td) {
-    filename = std::string(fname);
+HeapFile::HeapFile(const char *fname, const TupleDesc &tdesc)
+        : td(tdesc), filename(fname), mutableNumPages(0), isNumPagesSet(false) {
+
     file.open(filename, std::ios::in | std::ios::out | std::ios::binary);
+
     if (!file) {
         // Handle file opening error
         throw std::runtime_error("Failed to open the heap file.");
     }
 }
+
 
 int HeapFile::getId() const {
     // TODO pa1.5: implement
@@ -67,22 +70,27 @@ Page *HeapFile::readPage(const PageId &pid) {
 
 int HeapFile::getNumPages() {
     // TODO pa1.5: implement
-    file.open(filename, std::ios::in | std::ios::binary);  // Open the file in binary mode.
-    if(!file) {
-        throw std::runtime_error("Unable to open the file.");
+    if (!isNumPagesSet) {
+        file.open(filename, std::ios::in | std::ios::binary);
+        if (!file) {
+            throw std::runtime_error("Unable to open the file.");
+        }
+        file.seekg(0, std::ios::end);
+        mutableNumPages = file.tellg() / Database::getBufferPool().getPageSize();
+        file.close();  // Close the file after getting the number of pages.
+        isNumPagesSet = true;
     }
-    file.seekg(0, std::ios::end);
-    int numPages = file.tellg() / Database::getBufferPool().getPageSize();
-    file.close();  // Close the file after getting the number of pages.
-    return numPages;
+    return mutableNumPages;
 }
 
 HeapFileIterator HeapFile::begin() const {
     // TODO pa1.5: implement
+    return HeapFileIterator(const_cast<HeapFile&>(*this), 0, 0);
 }
 
 HeapFileIterator HeapFile::end() const {
     // TODO pa1.5: implement
+    return HeapFileIterator(const_cast<HeapFile&>(*this), mutableNumPages, 0);
 }
 
 //
@@ -90,17 +98,58 @@ HeapFileIterator HeapFile::end() const {
 //
 
 // TODO pa1.5: implement
-HeapFileIterator::HeapFileIterator(/* TODO pa1.5: add parameters */) {
+HeapFileIterator::HeapFileIterator(HeapFile &file, int startPageId, int startTupleIndex)
+        : heapFile(file), currentPageId(startPageId), tupleIter(startTupleIndex) {
+
+    if (numPagesCache == -1) {
+        numPagesCache = heapFile.getNumPages();
+    }
+
+    currentPage = dynamic_cast<HeapPage*>(heapFile.readPage(HeapPageId(heapFile.getId(), currentPageId)));
 }
 
 bool HeapFileIterator::operator!=(const HeapFileIterator &other) const {
     // TODO pa1.5: implement
+    return currentPageId != other.currentPageId ||
+           (currentPageId == other.currentPageId && currentTupleIndex != other.currentTupleIndex);
 }
 
 Tuple &HeapFileIterator::operator*() const {
     // TODO pa1.5: implement
+    if (!currentPage) {
+        throw std::runtime_error("Iterator not initialized or dereferencing end iterator");
+    }
+    HeapPageIterator pageIter(0, currentPage);
+    for(int i = 0; i < tupleIter; ++i) {
+        ++pageIter;
+    }
+    return *pageIter;
 }
 
 HeapFileIterator &HeapFileIterator::operator++() {
     // TODO pa1.5: implement
+    if (!currentPage) {
+        throw std::runtime_error("Incrementing past the end of the iterator");
+    }
+
+    do {
+        ++tupleIter;
+    } while(tupleIter < currentPage->getNumTuples() && !currentPage->isSlotUsed(tupleIter)); // Find the next used slot
+
+    if (tupleIter >= currentPage->getNumTuples()) {  // If end of the current page
+        if (currentPageId >= heapFile.getNumPages() - 1) {
+            currentPage = nullptr;
+            tupleIter = -1; // Indicate end
+            return *this;
+        }
+
+        currentPageId++;
+        tupleIter = 0;
+        currentPage = dynamic_cast<HeapPage*>(heapFile.readPage(HeapPageId(heapFile.getId(), currentPageId)));
+
+        while(tupleIter < currentPage->getNumTuples() && !currentPage->isSlotUsed(tupleIter)) {
+            ++tupleIter;
+        }
+    }
+    return *this;
 }

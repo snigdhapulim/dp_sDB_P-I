@@ -18,7 +18,6 @@ namespace db {
         const RecordId* recordId;
         using iterator = std::vector<const Field*>::const_iterator;
 
-
         //using iterator = void*; // replace void* with a container iterator or a custom iterator implementation
     public:
 
