@@ -34,7 +34,7 @@ namespace db {
         // TODO pa1.5: add private members
     private:
         // TODO added
-        const TupleDesc td;
+        const TupleDesc &td;
 
     public:
 
